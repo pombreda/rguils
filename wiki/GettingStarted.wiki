@@ -30,4 +30,4 @@ The following instructions are for Windows:
  * WindowsVista: definitions for Windows Vista
  * [Windows7]: definitions for Windows 7
  * WindowsUtil: utility functions for Windows operating systems
- * SikuliImportProjects: import images and other attributes from Sikuli projects
+ * SikuliImport: import images and other symbols from Sikuli projects

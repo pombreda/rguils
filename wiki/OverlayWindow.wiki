@@ -11,7 +11,7 @@ The overlaywindow module is a Jython module that contains classes to draw overla
 
 === !OverlayWindow ===
 
-This is an abstract base class to show a region on the screen. Subclasses must implement the methods _prepareShowRegion()_ to prepare the overlay window for drawing, and _paint(graphics)_ (specified in javax.swing.Jwindow) to draw the overlay window.
+This is an abstract base class to show a region on the screen. Subclasses must implement the methods prepareShowRegion() to prepare the overlay window for drawing, and paint(graphics) (specified in javax.swing.Jwindow) to draw the overlay window.
 {{{
 from seagull.overlaywindow import OverlayWindow
 

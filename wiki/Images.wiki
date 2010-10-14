@@ -30,7 +30,7 @@ IMG_BUTTONS = {
     'back' : ['1274999069194.png', '1274999098834.png', '1274999116678.png']
 }
 }}}
-(the image filenames are actually expanded to absolute pathnames by the SikuliImport module, but we only show the filenames for readability).
+(the SikuliImport module expands image filenames to absolute pathnames, but for readability only the filenames are shown).
 
 To use button images:
 {{{
