@@ -1,0 +1,33 @@
+﻿#summary Installing and using RGUILS
+#labels Featured
+
+= Introduction =
+
+RGUILS (<b>R</b>obust <b>GUI</b> automation <b>L</b>ibrary for <b>S</b>ikuli) is a python library that provides an object-oriented API to interact with common GUI elements, such as buttons, checkboxes, windows and dialogue hierarchies. RGUILS uses [http://sikuli.org/ Sikuli Script] to interact with GUIs. RGUILS has been designed to make GUI automation and testing easier and more robust. RGUILS can be pronounced either as _rogels_ or _ragils_.
+
+Read more about SikuliScript and RobustGuiAutomation.
+
+= Installation =
+
+The following instructions are for Windows:
+ # Download and install Sikuli from http://sikuli.org/
+ # Create a folder for Sikuli projects. RGUILS assumes that this folder is called _Sikuli_ and is located in your home directory (Windows XP: C:\Documents and Settings\_{username}_\Sikuli, Windows Vista/7: C:\Users\_{username}_\Sikuli).
+ # Check out RGUILS and put the contents of the src/python folder (seagull, sikuliimport) into your Sikuli projects folder.
+ # Copy the following files from the resources folder to the Sikuli IDE installation folder (C:\Program Files\Sikuli): sikuli-script.bat, sikuli-shell.bat, userlib.py
+ # If your Sikuli projects folder is not in the default location (see above), edit userlib.py in the Sikuli IDE installation folder and set the USERLIBDIR variable to point to your Sikuli projects folder.
+
+= List of RGUILS modules =
+
+ * [Buttons]
+ * [Checkboxes]
+ * DialogueWindow
+ * [Images]
+ * OverlayWindow
+ * [Util]
+ * [Window]
+ * WindowFlavor
+ * WindowsXP
+ * WindowsVista
+ * [Windows7]
+ * WindowsUtil
+ * SikuliImportProjects
