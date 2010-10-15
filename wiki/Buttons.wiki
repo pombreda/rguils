@@ -1,4 +1,4 @@
-#summary RGUILS module to model sets of buttons
+﻿#summary RGUILS module to model sets of buttons
 #labels Documentation
 
 = Introduction =
@@ -15,22 +15,24 @@ Models a list (or set) of buttons. A button list is created by providing a dicti
 {{{
 from seagull.buttons import Buttons
 
-next_images = [img_next_button_1, img_next_button_2, img_next_button_3, img_next_button_4]
-prev_images = [img_prev_button_1, img_prev_button_2, img_prev_button_3, img_prev_button_4]
-cancel_images = [img_cancel_button_1, img_cancel_button_2, img_cancel_button_3, img_cancel_button_4]
-button_images = {
-    'next' : next_images,
-    'prev' : prev_images,
-    'cancel' : cancel_images
+NEXT_BUTTONS = [IMG_NEXT_BUTTON_1, IMG_NEXT_BUTTON_2, IMG_NEXT_BUTTON_3]
+PREV_BUTTONS = [IMG_PREV_BUTTON_1, IMG_PREV_BUTTON_2, IMG_PREV_BUTTON_3]
+CANCEL_BUTTONS = [IMG_CANCEL_BUTTON_1, IMG_CANCEL_BUTTON_2, IMG_CANCEL_BUTTON_3]
+BUTTONS = {
+    'next' : NEXT_BUTTONS,
+    'prev' : PREV_BUTTONS,
+    'cancel' : CANCEL_BUTTONS
 }
 
-buttonlist = Buttons(button_images, region = app_window_region)
+buttonlist = Buttons(BUTTONS, region = app_window_region)
 }}}
 This defines three buttons (next, prev, cancel) in the app_window_region. After the buttons are defined, they must be located in the region by calling find_buttons:
 {{{
 buttonlist.find_buttons()
+
 print 'found %d buttons' % buttonlist.button_count()
 print 'found the following buttons: %s' % ', '.join(buttonlist.button_names())
+
 if buttonlist.exists_button('cancel'):
     print 'cancel button exists'
 }}}
@@ -42,34 +44,38 @@ buttonlist.click('next')
 }}}
 An optional argument can be used to specify images of disabled buttons:
 {{{
-next_disabled_images = [img_next_button_disabled]
-prev_disabled_images = [img_prev_button_disabled]
-cancel_disabled_images = [img_cancel_button_disabled]
-disabled_button_images = {
-    'next' : next_disabled_images,
-    'prev' : prev_disabled_images,
-    'cancel' : cancel_disabled_images
+NEXT_BUTTONS_DISABLED = [IMG_NEXT_BUTTON_DISABLED]
+PREV_BUTTONS_DISABLED = [IMG_PREV_BUTTON_DISABLED]
+CANCEL_BUTTONS_DISABLED = [IMG_CANCEL_BUTTON_DISABLED]
+DISABLED_BUTTONS = {
+    'next' : NEXT_BUTTONS_DISABLED,
+    'prev' : PREV_BUTTONS_DISABLED,
+    'cancel' : CANCEL_BUTTONS_DISABLED
 }
-buttonlist = Buttons(button_images, disabled_button_images, region = app_window_region)
+buttonlist = Buttons(BUTTONS, DISABLED_BUTTONS, region = app_window_region)
 }}}
-If a disabled button image gives a higher match score than the best match for a normal image of the same button, the class assumes that the button is disabled. After locating buttons, you can check which buttons are enabled, and wait until all or specific buttons are enabled:
+If the best match score for a disabled button image is higher than the best match score for a normal (non-disabled) image of the same button, the class assumes that the button is disabled. After locating buttons, you can check which buttons are enabled, and wait until all or specific buttons are enabled:
 {{{
 buttonlist.find_buttons()
+
 if buttonlist.all_buttons_enabled():
     print 'all buttons are enabled'
 if buttonlist.is_button_enabled('next'):
     print 'next button is enabled'
-buttonlist.waitUntilButtonIsEnabled('next', 10)
+
 # returns when the 'next' button is enabled
 # raises Exception if the 'next' button is not enabled after 10 seconds
-buttonlist.waitUntilAllButtonsEnabled(10)
+buttonlist.waitUntilButtonIsEnabled('next', 10)
+
 # returns when all buttons are enabled
 # raises Exception if not all buttons are enabled after 10 seconds
+buttonlist.waitUntilAllButtonsEnabled(10)
 }}}
 The wait methods update the button status (enabled/disabled) every second by searching for the button images within the region of a button. You can update the button status at any time:
 {{{
 # updates the status of the 'cancel' button
 buttonlist.update_button('cancel')
+
 # updates the status of all buttons
 buttonlist.update_buttons()
 }}}

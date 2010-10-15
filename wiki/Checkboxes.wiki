@@ -21,21 +21,24 @@ Models a row or column of checkboxes.
 {{{
 from seagull.checkboxes import Checkboxes
 
-checked_images = [img_checkbox_checked_1, img_checkbox_checked_2]
-unchecked_images = [img_checkbox_unchecked_1, img_checkbox_unchecked_2]
-checkbox_images = {
-    'checked' : checked_images,
-    'unchecked' : unchecked_images
+CHECKED_IMAGES = [IMG_CHECKBOX_CHECKED_1, IMG_CHECKBOX_CHECKED_2]
+UNCHECKED_IMAGES = [IMG_CHECKBOX_UNCHECKED_1, IMG_CHECKBOX_UNCHECKED_2]
+CHECKBOX_IMAGES = {
+    'checked' : CHECKED_IMAGES,
+    'unchecked' : UNCHECKED_IMAGES
 }
-checkboxes = Checkboxes(checkbox_images, region = app_window_region, orientation = 0)
+checkboxes = Checkboxes(CHECKBOX_IMAGES, region = app_window_region, orientation = 0)
 }}}
 This defines a vertical row of checkboxes in the app_window_region (to define a horizontal row, use orientation = REGION_SORT_HORIZONTAL, defined in [Util]). After the checkboxes are defined, they must be located in the region by calling find_elements:
 {{{
 checkboxes.find_elements()
 print 'found %d checkboxes' % checkboxes.length()
+
 if checkboxes.is_checked(0):
     print 'first checkbox is checked'
+
 print 'indexes of checked elements: %s' % ', '.join(map(str, checkboxes.checked_elements()))
+
 for i, is_checked in enumerate(checkboxes.checked()):
     if is_checked:
         print 'checkbox %d is checked' % (i + 1)
@@ -66,7 +69,7 @@ If the optional parameter auto_verify is set to True, the methods that click on 
 checkboxes = Checkboxes(checkbox_images, region = app_window_region, orientation = 0, auto_verify = True, timeout = 5)
 }}}
 
-=== VerticalCheckboxList ===
+=== !VerticalCheckboxList ===
 
 Subclass of Checkboxes to model a vertical column of checkboxes.
 {{{
@@ -75,25 +78,26 @@ from seagull.checkboxes import VerticalCheckboxList
 checkboxes = VerticalCheckboxList(checkbox_images, region = app_window_region)
 }}}
 
-=== HorizontalCheckboxList ===
+=== !HorizontalCheckboxList ===
 
 Subclass of Checkboxes to model a horizontal row of checkboxes.
 
-=== RadioButtons ===
+=== !RadioButtons ===
 
 Models a row or column of radio buttons. At most one radio button can be checked at a time. If a radio button is checked, any other radio button that was previously checked will be unchecked.
 {{{
 from seagull.checkboxes import RadioButtons
 
-radiobuttons = RadioButtons(radio_button_images, region = app_window_region, orientation = 0)
+radiobuttons = RadioButtons(RADIO_BUTTON_IMAGES, region = app_window_region, orientation = 0)
+
 radiobuttons.find_elements()
 print 'button %d is checked' % radiobuttons.checked_element()
 }}}
 
-=== VerticalRadioButtonList ===
+=== !VerticalRadioButtonList ===
 
 Subclass of !RadioButtons to model a vertical column of radio buttons.
 
-=== HorizontalRadioButtonList ===
+=== !HorizontalRadioButtonList ===
 
 Subclass of !RadioButtons to model a horizontal row of radio buttons.
