@@ -1,0 +1,5 @@
+﻿#summary discusses challenges in robust GUI automation
+
+= Introduction =
+
+Back button: http://rguils.googlecode.com/svn/wiki/images/back.png
