@@ -1,5 +1,5 @@
 ﻿#summary RGUILS module with utility functions for Windows
-#labels Documentation
+#labels Documentation,Windows
 
 = Introduction =
 
