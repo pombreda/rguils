@@ -1,4 +1,4 @@
-#summary RGUILS module to define window properties
+﻿#summary RGUILS module to define window properties
 #labels Documentation
 
 = Introduction =
@@ -10,6 +10,19 @@ The windowflavor module defines window properties that depend on the operating s
 
 {{{
 from seagull.windowflavor import WINDOW_TITLEBAR_HEIGHT
+}}}
+
+= Module contents =
+
+== Functions ==
+
+=== getWindowsVersion ===
+
+Returns the Windows version. The return value is 'XP', 'Vista' or '7'.
+{{{
+from seagull.windowflavor import getWindowsVersion
+
+print 'Windows version: %s' % getWindowsVersion()
 }}}
 
 = See also =
