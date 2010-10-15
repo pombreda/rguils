@@ -112,12 +112,16 @@ openOutlook()
 
 Launches Windows Explorer with a new single-pane window. If a folder is specified, it is opened in the window, otherwise the default folder (usually C:\) is opened.
 {{{
-openWindowsExplorer()                     # opens "C:\" in Windows Explorer
-openWindowsExplorer('C:\\Program Files')  # opens "C:\Program Files" in Windows Explorer
+# opens "C:\" in Windows Explorer
+openWindowsExplorer()
+
+# opens "C:\Program Files" in Windows Explorer
+openWindowsExplorer('C:\\Program Files')
 }}}
 The select argument can be used to select a filename or folder in the window. You must specify the absolute path of the folder or filename to select. The folder argument will be ignored in this case.
 {{{
-openWindowsExplorer(select = C:\\Program Files')  # opens "C:\" and selects "Program Files"
+# opens "C:\" and selects "Program Files"
+openWindowsExplorer(select = 'C:\\Program Files')
 
 # display Microsoft Outlook file properties
 openWindowsExplorer(select = getOutlookPath())
