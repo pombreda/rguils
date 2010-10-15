@@ -201,7 +201,7 @@ REGION_SORT_HORIZONTAL = 4
 REGION_SORT_HDESC = 2
 REGION_SORT_VDESC = 1
 }}}
-Given four regions with coordinates of their top-left corners A=(10,10), B=(20,10), C=(10,20), D=(20,20), which would be positioned as follows:
+Given four regions with coordinates of their top-left corners A=(10, 10),  B=(20, 10),  C=(10, 20),  D=(20, 20),  which would be positioned as follows:
 {{{
 A   B
 
@@ -223,18 +223,18 @@ For example:
 {{{
 regions = [A, B, C, D]
 sortRegions(regions, REGION_SORT_HORIZONTAL | REGION_SORT_VDESC)
-print regions  # [C,A,D,B]
+print regions  # [C, A, D, B]
 }}}
 
 === getUniqueRegions ===
 
 Takes a list of regions and returns a new list that contains the same regions as the original list, in the same order, but with any duplicate regions removed. Two regions are duplicates if they have the same coordinates and size.
 {{{
-r1 = Region(10,10,40,20)
-r2 = Region(30,10,10,40)
-r3 = Region(10,10,40,20)
-regions = [r1,r2,r3]
-unique_regions = getUniqueRegions(regions)  # [r1,r2]
+r1 = Region(10, 10, 40, 20)
+r2 = Region(30, 10, 10, 40)
+r3 = Region(10, 10, 40, 20)
+regions = [r1, r2, r3]
+unique_regions = getUniqueRegions(regions)  # [r1, r2]
 }}}
 
 === bestMatch ===
