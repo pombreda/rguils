@@ -9,11 +9,11 @@ A module that wants to import symbols from a Sikuli project can do so by importi
 {{{
 from sikuliimport.projects import *
 }}}
-The sikuliimport.projects module imports symbols from one or more Sikuli projects that are listed in a configuration file. In addition, any string that appears to be a Sikuli image filename is replaced with its absolute filename. For example, given the following constant in a Sikuli project:
+The sikuliimport.projects module imports symbols from one or more Sikuli projects that are listed in a configuration file. In addition, any string that appears to be a Sikuli image filename is replaced with its absolute filename. For example, given the following constant in the foo.sikuli project:
 {{{
 FOO_CONST = '1270078045794.png'
 }}}
-{{{FOO_CONST}}} will be imported into the current module as
+{{{FOO_CONST}}} is imported from sikuliimport.projects as
 {{{
 FOO_CONST = r'C:\Documents and Settings\username\Sikuli\foo.sikuli\1270078045794.png'
 }}}
@@ -21,9 +21,9 @@ The image filename expansion goes recursively through the basic python data stru
 
 = Configuration =
 
-You specify which Sikuli projects are imported by listing them in sikuliimport/settings.py, which is imported by sikuliimport.projects. For example, to import symbols from two Sikuli projects, foo.sikuli and bar.sikuli, you put the following line in sikuliimport/settings.py:
+You specify which Sikuli projects are imported by listing them in sikuliimport/settings.py, which is imported by sikuliimport.projects. For example, to import symbols from two Sikuli projects, foo.sikuli and bar.sikuli, you put the following in sikuliimport/settings.py:
 {{{
 SIKULI_PROJECT_DIRS = [r'C:\Documents and Settings\username\Sikuli\foo.sikuli',
                        r'C:\Documents and Settings\username\Sikuli\bar.sikuli']
 }}}
-If sikuliimport/settings.py does not exist, sikuliimport.projects tries to import sikuliimport/defaultsettings.py.
+If sikuliimport/settings.py does not exist, sikuliimport.projects reverts to sikuliimport/defaultsettings.py.
