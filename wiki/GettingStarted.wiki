@@ -16,6 +16,14 @@ The following instructions are for Windows:
  # Copy the following files from the resources folder to the Sikuli IDE installation folder (C:\Program Files\Sikuli): sikuli-script.bat, sikuli-shell.bat, userlib.py
  # If your Sikuli projects folder is not in the default location (see above), edit userlib.py in the Sikuli IDE installation folder and set the USERLIBDIR variable to point to your Sikuli projects folder.
 
+= Running =
+
+The sikuli-script.bat Windows batch file can be used to run a Sikuli script file from the command line. Simply open a command prompt, cd into your Sikuli projects folder and type the command:
+{{{
+C:\Documents and Settings\username\Sikuli>"\Program Files\Sikuli\sikuli-script.bat" foo.sikuli
+}}}
+For more information see the SikuliOverview.
+
 = List of RGUILS modules =
 
  * [Buttons]: classes to model sets of buttons
