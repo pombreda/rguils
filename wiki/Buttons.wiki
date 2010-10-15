@@ -79,3 +79,9 @@ buttonlist.update_button('cancel')
 # updates the status of all buttons
 buttonlist.update_buttons()
 }}}
+
+= See also =
+
+ * [Checkboxes]
+ * [Images]
+ * SikuliImport

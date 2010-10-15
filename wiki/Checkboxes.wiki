@@ -101,3 +101,9 @@ Subclass of !RadioButtons to model a vertical column of radio buttons.
 === !HorizontalRadioButtonList ===
 
 Subclass of !RadioButtons to model a horizontal row of radio buttons.
+
+= See also =
+
+ * [Buttons]
+ * [Images]
+ * SikuliImport
