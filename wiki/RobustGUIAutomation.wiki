@@ -16,7 +16,9 @@ Sikuli's visual scripting promises to make GUI automation very easy. However, in
 == Identifying GUI elements correctly ==
 
 Let's say you are automating some wizzard with two buttons labeled "Next", "Back" and "Cancel" and you want to click the Next button:
-<div style="text-align:center">http://rguils.googlecode.com/svn/wiki/images/installerwindow.png</div>
+
+http://rguils.googlecode.com/svn/wiki/images/installerwindow.png
+
 The most naive approach would be to take an image of the Next button (using the Sikuli IDE) and call the click function:
 {{{
 click('next_button.png')
@@ -24,8 +26,10 @@ click('next_button.png')
 But when you run the script, Sikuli clicks on the Back button. Why is this? Remember that Sikuli finds the best match, i.e. the region with the same size as the image that maximizes the similarity between the region's visual content and the image. Apparently the Back button looks more similar to your image than the Next button.
 
 The problem is that buttons look different depending on their state, i.e. whether the button has focus or not, the window that contains the button has focus or not, the mouse is over the button or not, the button is enabled or disabled, etc. For example, in Windows XP the border color of a standard button changes depending on focus and mouse over:
-<div style="text-align:center;border:thin black solid;padding:10px;background-color:#e3e8f9">http://rguils.googlecode.com/svn/wiki/images/back.png - http://rguils.googlecode.com/svn/wiki/images/next.png - http://rguils.googlecode.com/svn/wiki/images/next_focus.png - http://rguils.googlecode.com/svn/wiki/images/next_mouse_over.png - http://rguils.googlecode.com/svn/wiki/images/next_disabled.png<br>
-Back button; Next button: no focus, no mouse over; focus, no mouse over; mouse over; disabled</div>
+ * http://rguils.googlecode.com/svn/wiki/images/next.png
+ * http://rguils.googlecode.com/svn/wiki/images/next_focus.png (button has focus)
+ * http://rguils.googlecode.com/svn/wiki/images/next_mouse_over.png (mouse over button)
+ * http://rguils.googlecode.com/svn/wiki/images/next_disabled.png (button is disabled)
 If the Next button in the wizzard has focus but in your image it doesn't, then the Back button might look more similar to your image than the Next button. A human user would most likely not make that mistake because as humans we use the button label to identify the correct button and abstract from the border color, but Sikuli (or the image matching algorithm it uses) has no concept of characters; it just sees a rectangular area of pixels.
 
 Then why not use multiple images of the Next button, one with a thin black border, one with a blue border and one with an orange border. We let Sikuli find the best match for each image and then pick the match with the highest score:
@@ -69,9 +73,9 @@ def find_similar_match(match, matches):
     return None
 
 IMAGES = {
-    'back' : ['back.png','back_focus.png','back_mouse_over.png'],
-    'next' : ['next.png','next_focus.png','next_mouse_over.png'],
-    'cancel' : ['cancel.png','cancel_focus.png','cancel_mouse_over.png']
+    'back' : ['back.png', 'back_focus.png', 'back_mouse_over.png'],
+    'next' : ['next.png', 'next_focus.png', 'next_mouse_over.png'],
+    'cancel' : ['cancel.png', 'cancel_focus.png', 'cancel_mouse_over.png']
 }
 
 best_matches = []
@@ -117,7 +121,9 @@ Experience with Sikuli so far has shown that
 Missed matches and spurious matches may be artifacts of the image matching algorithm used by Sikuli. In order to avoid wrong matches and to speed up image search, it is therefore desirable to restrict the search region as much as possible.
 
 Sometimes the target image is in a fixed region on a screen, for example when clicking on an icon in the Windows taskbar. Suppose a script wants to open the Windows start menu:
-<div style="text-align:left">http://rguils.googlecode.com/svn/wiki/images/taskbar.png</div>
+
+http://rguils.googlecode.com/svn/wiki/images/taskbar.png
+
 {{{
 taskbar_region = Region(0, SCREEN.getH() - 31, SCREEN.getW(), 31)
 taskbar_region.click('windows_start.png')
@@ -131,13 +137,17 @@ Note that Sikuli itself has no concept of an application window. Sikuli treats t
  # The OS propagates the event, along with the window id, to the application.
  # An event listener in the application receives the event and calls an event handler that updates the window state and/or processes the event according to the application logic.
 For the purpose of automating an application, this means we cannot rely on Sikuli to obtain information about the (location and size of the) current application window, but we can use Sikuli to find the window on the screen. If the application window contains a logo or some other identifyable image of sufficient size, its location on the screen can be determined relatively reliably by searching for that image. Assuming that the window size is fixed and known, a region can then be created with the size of the window and a location relative to the logo or other image.
-<div style="text-align:center">http://rguils.googlecode.com/svn/wiki/images/installerwindow_anchor.png</div>
+
+http://rguils.googlecode.com/svn/wiki/images/installerwindow_anchor.png
+
 {{{
 anchor_match = find('applogo.png')
 window_region = Region(anchor_match.getX() - 2, anchor_match.getY() - 30, 499, 392)
 }}}
 If the target element is known to be within a specific part of the application window (e.g. in the title bar or in the lower half of the window), we can create another region as a subregion of the window region and with a location relative to the location of the window region.
-<div style="text-align:center">http://rguils.googlecode.com/svn/wiki/images/installerwindow_regions.png</div>
+
+http://rguils.googlecode.com/svn/wiki/images/installerwindow_regions.png
+
 {{{
 # title bar is 30 pixels from the top of the window
 titlebar_region = Region(window_region.getX(), window_region.getY(),
