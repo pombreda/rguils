@@ -1,4 +1,4 @@
-﻿#summary discusses challenges in robust GUI automation
+﻿#summary Discusses challenges in robust GUI automation
 
 = Introduction =
 

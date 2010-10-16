@@ -1,4 +1,4 @@
-﻿#summary utility functions and classes for RGUILS
+﻿#summary Utility functions and classes for RGUILS
 #labels Documentation
 
 = Introduction =
