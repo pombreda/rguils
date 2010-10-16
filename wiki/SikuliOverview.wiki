@@ -4,7 +4,7 @@
 
 [http://sikuli.org/ Sikuli] is a tool to automate GUIs (graphical user interfaces). Sikuli uses images of GUI elements (e.g. buttons) and [http://opencv.willowgarage.com/ open source computer vision algorithms] to locate them on the screen in order to interact with them.
 
-Sikuli consists of Sikuli Script, a Jython module with a scripting API, and Sikuli IDE, an integrated development environment for visual scripting.
+Sikuli consists of Sikuli Script, a Jython module with a scripting API, and the Sikuli IDE, an integrated development environment for visual scripting.
 
 = How Sikuli works =
 
@@ -18,7 +18,7 @@ click('button.png')
 }}}
 When the script is run and the click method is called, Sikuli captures the screen and searches the screen image for an area that matches the button image. If a match is found, Sikuli generates a click event that is located at the center of the button. If no match is found, an Exception is thrown.
 
-= Visual scripting with Sikuli IDE =
+= Visual scripting with the Sikuli IDE =
 
 The Sikuli IDE enables _visual scripting_ by displaying images inline in a script. The Sikuli IDE makes it particularly easy to take images of GUI elements (or of anything on the screen). When you click the camera icon in the IDE, the IDE captures the screen (after minimizing itself) and then presents a cursor to select a rectangle in the screenshot and saves the contents of the selected rectangle to a PNG file.
 
