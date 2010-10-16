@@ -15,7 +15,7 @@ Sikuli's visual scripting promises to make GUI automation very easy. However, in
 
 == Identifying GUI elements correctly ==
 
-Let's say you are automating some wizzard with two buttons labeled "Next", "Back" and "Cancel" and you want to click the Next button:
+Let's say you are automating some wizzard with three buttons labeled "Next", "Back" and "Cancel" and you want to click the Next button:
 
 http://rguils.googlecode.com/svn/wiki/images/installerwindow.png
 
