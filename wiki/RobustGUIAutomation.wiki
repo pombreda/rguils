@@ -2,4 +2,223 @@
 
 = Introduction =
 
-Back button: http://rguils.googlecode.com/svn/wiki/images/back.png
+This document explains some of the challenges that GUI automation with Sikuli, and GUI automation in general, present. If you are not familiar with Sikuli, read the SikuliOverview first.
+
+= GUI automation challenges =
+
+Sikuli's visual scripting promises to make GUI automation very easy. However, in reality, robust GUI automation is much more difficult to achieve. The following is a list of challenges that will be considered in more detail below:
+ * the same GUI element can look different, depending on its state or the application's state
+ * different GUI elements can look similar
+ * missed matches and spurious matches
+ * lack of synchronization between the application and the GUI automation
+ * lack of a window concept in Sikuli
+
+== Identifying GUI elements correctly ==
+
+Let's say you are automating some wizzard with two buttons labeled "Next", "Back" and "Cancel" and you want to click the Next button:
+<div style="text-align:center">http://rguils.googlecode.com/svn/wiki/images/installerwindow.png</div>
+The most naive approach would be to take an image of the Next button (using the Sikuli IDE) and call the click function:
+{{{
+click('next_button.png')
+}}}
+But when you run the script, Sikuli clicks on the Back button. Why is this? Remember that Sikuli finds the best match, i.e. the region with the same size as the image that maximizes the similarity between the region's visual content and the image. Apparently the Back button looks more similar to your image than the Next button.
+
+The problem is that buttons look different depending on their state, i.e. whether the button has focus or not, the window that contains the button has focus or not, the mouse is over the button or not, the button is enabled or disabled, etc. For example, in Windows XP the border color of a standard button changes depending on focus and mouse over:
+<div style="text-align:center;border:thin black solid;padding:10px;background-color:#e3e8f9">http://rguils.googlecode.com/svn/wiki/images/back.png - http://rguils.googlecode.com/svn/wiki/images/next.png - http://rguils.googlecode.com/svn/wiki/images/next_focus.png - http://rguils.googlecode.com/svn/wiki/images/next_mouse_over.png - http://rguils.googlecode.com/svn/wiki/images/next_disabled.png<br>
+Back button; Next button: no focus, no mouse over; focus, no mouse over; mouse over; disabled</div>
+If the Next button in the wizzard has focus but in your image it doesn't, then the Back button might look more similar to your image than the Next button. A human user would most likely not make that mistake because as humans we use the button label to identify the correct button and abstract from the border color, but Sikuli (or the image matching algorithm it uses) has no concept of characters; it just sees a rectangular area of pixels.
+
+Then why not use multiple images of the Next button, one with a thin black border, one with a blue border and one with an orange border. We let Sikuli find the best match for each image and then pick the match with the highest score:
+{{{
+BUTTON_IMAGES = ['next.png', 'next_focus.png', 'next_mouse_over.png']
+
+best_match = None
+for image in BUTTON_IMAGES:
+    try:
+        match = find(image)
+        if best_match is None or match.getScore() > best_match.getScore():
+            best_match = match
+    except FindFailed:
+        pass
+
+if best_match is None:
+    raise FindFailed
+click(best_match)
+}}}
+The problem is that this approach is invalid, because it compares match scores that are incomparable. In order for the scores of two matches to be comparable, they must have a common base, which is either the image or the match region:
+ * If the same image is matched with two different regions, the scores are comparable on the basis that both matches use a common image, so we can select the region that better resembles the image.
+ * Similarly, if two images are matched with the same region, the scores are comparable on the basis that the matches are performed on a common section of the screen, so we can select the image that better represents the region.
+ * However, if one image is matched with one region and another image is matched with another region, there is no common base to compare the match scores.
+Match scores without a common base are incomparable because a match score is not some absolute measure of similarity. For example, a score of 0.7 cannot be interpreted as 70% similarity between the image and the region.
+
+As an illustration, imagine you want to make apple cake and you send an alien from a different planet to the grocery to buy apples. Unfortunately, the alien doesn't know apples, so you give him two pictures, one with green apples and one with yellow apples. The grocery has green apples and yellow mangos. The alien looks at the apples and mangos and compares them to the apples on his two pictures and concludes that the green apples look like green apples and the mangos look like yellow apples. For some reason the alien thinks that the mangos look more like yellow apples than the green apples look like the green apples on his picture (maybe they are smaller than those on the picture), and he decides to buy the mangos. When he comes back with the mangos, you are angry because you can't make apple cake with mangos.
+
+Identifying buttons (and other GUI elements for that matter) using fuzzy image matching can be regarded as a classification problem: Find each button on the screen and determine the most likely button type (i.e. Back, Next or Cancel). An algorithm that compares match scores does not work, as argued above, even with the additional assumption that one of the buttons is the target (i.e. Next) button and all other buttons are of a different type. Applying thresholds to the match scores does not work either, for the same reason (i.e. match scores are not absolute measures of similarity).
+
+In order to classify buttons, we need knowledge (i.e. images) of all buttons on the screen, not just the button we are interested in. Then we can find all buttons by searching for matches, and determine the type of each button by comparing the scores of matches that cover the same region. In practice, we make an additional assumption: that there is at most one button of each type. With this assumption we can simplify the first step by considering only the best match for each image. The algorithm then looks as follows:
+ # For each image, we find the best match. Some images will match the wrong button, for example the Next image with the thin black border will match the Back button, and the Back image with blue border will match the Next button.
+ # For each button we select the match from step 1 with the highest score. This eliminates the wrong matches from step 1 because the Back image with thin black border has a higher match score on the Back button than the Next image with thin black border, and the Next image with blue border has a higher match score than the Back image with blue score on the Next button.
+Note that in step 1 we are only comparing matches that use the same image in different regions, while in step 2 we only compare matches that use the same region but different images, so all comparisons are valid. Given that we have an image of each button in each state, the algorithm finds all buttons and correctly identifies the type of each button.
+
+The following code shows an implementation of the algorithm. Here we assume a function 'is_similar_region' that returns True if two regions overlap significantly:
+{{{
+def find_similar_match(match, matches):
+    for i, m in enumerate(matches):
+        if is_similar_region(match, m):
+            return i
+    return None
+
+IMAGES = {
+    'back' : ['back.png','back_focus.png','back_mouse_over.png'],
+    'next' : ['next.png','next_focus.png','next_mouse_over.png'],
+    'cancel' : ['cancel.png','cancel_focus.png','cancel_mouse_over.png']
+}
+
+best_matches = []
+button_types = []
+
+for key in IMAGES.keys():
+    for image in IMAGES[key]:
+        # find best match for this image
+        match = find(image)
+
+        # is there already a match for the same region?
+        index = find_similar_match(match, best_matches)
+        if index is not None:
+            # save the best match for each region
+            if match.getScore() > best_matches[index].getScore():
+                best_matches[index] = match
+                button_types[index] = key
+        else:
+            # new region
+            best_matches.append(match)
+            button_types.append(key)
+
+# store matches in dictionary object with button type as key
+buttons = {}
+for key, match in zip(button_types, best_matches):
+    if key in buttons:
+        raise Exception("button '%s' found twice" % key)
+    buttons[key] = match
+
+# click Next button
+if 'next' not in buttons:
+    raise Exception('Next button not found')
+click(buttons['next'])
+}}}
+This algorithm is implemented in the [Buttons] class, with some additional features, such as detecting disabled buttons and waiting for buttons to become enabled.
+
+== Improving match accuracy and speed ==
+
+Experience with Sikuli so far has shown that
+ * larger images are found faster and more reliably than smaller images,
+ * restricting the region in which Sikuli searches for matches improves both speed and accuracy,
+ * searching for very small images (small icons, checkboxes, radio buttons) in a large area (e.g. on the entire screen) can result in both missed matches (not all occurrences are found) and spurious matches (false matches that look similar to the target image).
+Missed matches and spurious matches may be artifacts of the image matching algorithm used by Sikuli. In order to avoid wrong matches and to speed up image search, it is therefore desirable to restrict the search region as much as possible.
+
+Sometimes the target image is in a fixed region on a screen, for example when clicking on an icon in the Windows taskbar. Suppose a script wants to open the Windows start menu:
+<div style="text-align:left">http://rguils.googlecode.com/svn/wiki/images/taskbar.png</div>
+{{{
+taskbar_region = Region(0, SCREEN.getH() - 31, SCREEN.getW(), 31)
+taskbar_region.click('windows_start.png')
+}}}
+
+If the target element is part of an application window, it may not be possible (or desirable) to specify a region beforehand without knowing the location of the application window. In this case the window location has to be determined first, and then the region for finding the target element can be specified relative to the window location.
+
+Note that Sikuli itself has no concept of an application window. Sikuli treats the screen, or a region of the screen, as an image, but it knows nothing about other applications and their window hierarchies. When Sikuli clicks on a button in a window, it does not actually know anything about the button or the window, or even that a button exists at the point of the click. Here's what happens:
+ # Sikuli creates a mouse click event with the position of the match.
+ # The event, along with the position of the click on the screen, is received by the OS (i.e. Windows), which knows the window (if any) that is currently visible on the screen at the click position, and the application that owns the window.
+ # The OS propagates the event, along with the window id, to the application.
+ # An event listener in the application receives the event and calls an event handler that updates the window state and/or processes the event according to the application logic.
+For the purpose of automating an application, this means we cannot rely on Sikuli to obtain information about the (location and size of the) current application window, but we can use Sikuli to find the window on the screen. If the application window contains a logo or some other identifyable image of sufficient size, its location on the screen can be determined relatively reliably by searching for that image. Assuming that the window size is fixed and known, a region can then be created with the size of the window and a location relative to the logo or other image.
+<div style="text-align:center">http://rguils.googlecode.com/svn/wiki/images/installerwindow_anchor.png</div>
+{{{
+anchor_match = find('applogo.png')
+window_region = Region(anchor_match.getX() - 2, anchor_match.getY() - 30, 499, 392)
+}}}
+If the target element is known to be within a specific part of the application window (e.g. in the title bar or in the lower half of the window), we can create another region as a subregion of the window region and with a location relative to the location of the window region.
+<div style="text-align:center">http://rguils.googlecode.com/svn/wiki/images/installerwindow_regions.png</div>
+{{{
+# title bar is 30 pixels from the top of the window
+titlebar_region = Region(window_region.getX(), window_region.getY(),
+                         window_region.getW(), 30)
+
+# minimize/maximize/close buttons are in an 83 pixel wide region at the far
+# right of the title bar
+window_button_region = Region(titlebar_region.getX() + titlebar_region.getW()
+                   - 83, titlebar_region.getY(), 83, title_bar_region.getH())
+
+# buttons are in a 48 pixel high region at the bottom of the window
+button_region = Region(window_region.getX(), window_region.getY()
+                     + window_region.getH() - 48, window_region.getW(), 48)
+
+# click Next button
+button_region.click('next.png')
+
+# close window
+window_button_region.click('window_close_button.png')
+}}}
+The !AnchoredRegion class in the [Util] module and the Window and !AnchoredWindow classes in the [Window] module implement these ideas.
+
+== Synchronization ==
+
+GUI automation with Sikuli involves two applications: the target application that owns the GUI that is being automated, and the automation script that controls the application through its GUI. The automation script acts as a controller and observer:
+ * it creates mouse and keyboard events that are sent to the application by the OS (Windows), to control the application, and
+ * it observes changes in the GUI (windows being opened and closed, buttons being enabled or disabled, checkboxes and radio buttons changing their state, etc.), for example to determine the application's current state or to make assertions in automated tests.
+Note that the relationship between the target application and the automation script is one-sided: the application does not know (and should not know!) that it is being automated. It cannot (and should not) know whether the input it receives (in the form of mouse and keyboard events as well as other input) was generated by a human handling the mouse and typing on the keyboard, or by an automation script calling some API methods.
+
+This adds an additional challenge, besides that of finding GUI elements on the screen: synchronizing the actions of the automation script with changes in the target application state. Some examples are:
+ * waiting for the application window to appear on the screen after launching an application
+ * waiting for the application window to disappear after exiting an application
+ * waiting for buttons to become enabled (and thus responsive) after opening a new window
+ * waiting for checkboxes and radio buttons to change their state after clicking on them
+ * waiting for the application to complete an action after clicking a button
+Because of the one-sided relationship, there is no way for the automation script to be notified of a state change by the application. Instead, the automation script has to actively monitor the application.
+
+Since both the target application and the automation script are running on the same machine, they compete for system resources such as CPU time, memory and disk access. If the automation script consumes a lot of resources, this can affect the target application by slowing it down. A human user would not have this impact because a human user does not consume system resources. In addition, the OS also consumes some resources for process and display management.
+
+All this can make the application's GUI less responsive than it would be in normal (i.e. non automated) use. Running target applications and/or automation on remote machines (via [http://msdn.microsoft.com/en-us/library/aa383015(VS.85).aspx RDP] sessions) can increase slowness even further.
+
+Experience has shown that there can be a considerable time lag between Sikuli generating a mouse click event and the application receiving the event and updating its GUI. Even in such simple instances as clicking a checkbox it may take several seconds before the checkbox is actually checked. The delay can become arbitrarily longer if other applications running simultaneously increase the CPU load on the machine, or RDP is used over a slow network connection. Putting the automation script to sleep for a fixed amount of time to allow the application to update its GUI after a mouse click is therefore not robust; increasing the wait time to make it more robust would slow down automated tests unnecessarily by wasting time.
+
+When acting on a GUI element, it is therefore mandatory to monitor the GUI element and verify that its state has changed as expected by the action, before proceeding with the automation sequence. For example, an automation script that clicks on a checkbox that was previously unchecked must verify that the checkbox is actually checked after generating the click event. It can do so by defining a narrow region around the checkbox and searching in that area using an image of a checked checkbox and another of an unchecked checkbox. If the unchecked image yields a better match (i.e. a higher match score) or the checked image is not found at all, the checkbox is still unchecked. Only when the checked image yields a better match can the script assume that the click event has been propagated to the application and the checkbox has been updated.
+{{{
+# click on the checkbox
+checkbox = find('checkbox_unchecked.png')
+click(checkbox)
+
+# verify that the checkbox has been checked
+
+# create a region around the checkbox
+checkbox_region = checkbox.nearby(10)
+
+checked = False
+waited = 0
+while not checked and waited < TIMEOUT:
+
+    # get match score for checked checkbox image
+    try:
+        m_checked = checkbox_region.find('checkbox_checked.png')
+        s_checked = m_checked.getScore()
+    except FindFailed:
+        s_checked = 0
+
+    # get match score for unchecked checkbox image
+    try:
+        m_unchecked = checkbox_region.find('checkbox_unchecked.png')
+        s_unchecked = m_unchecked.getScore()
+    except FindFailed:
+        s_unchecked = 0
+
+    checked = s_checked > s_unchecked
+
+    # wait for 1 second if checkbox has not updated its state, then try again
+    if not checked:
+        t = min(1, TIMEOUT - waited)
+        sleep(t)
+        waited += t
+
+if not checked:
+    raise Exception('checkbox was not checked after %d seconds' % TIMEOUT)
+}}}
+The [Checkboxes] module supports verification for checkboxes and radio buttons.

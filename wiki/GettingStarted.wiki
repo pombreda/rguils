@@ -5,7 +5,7 @@
 
 RGUILS (<b>R</b>obust <b>GUI</b> automation <b>L</b>ibrary for <b>S</b>ikuli, pronounced as _rogels_ or _ragils_) is a python library that provides an object-oriented API to interact with common GUI elements, such as buttons, checkboxes, windows and dialogue hierarchies. RGUILS uses [http://sikuli.org/ Sikuli Script] to interact with GUIs. RGUILS has been designed to make GUI automation and testing easier and more robust.
 
-Read more about SikuliScript and [RobustGUIAutomation].
+Read the SikuliOverview and learn about [RobustGUIAutomation].
 
 = Installation =
 
