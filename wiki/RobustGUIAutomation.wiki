@@ -26,10 +26,10 @@ click('next_button.png')
 But when you run the script, Sikuli clicks on the Back button. Why is this? Remember that Sikuli finds the best match, i.e. the region with the same size as the image that maximizes the similarity between the region's visual content and the image. Apparently the Back button looks more similar to your image than the Next button.
 
 The problem is that buttons look different depending on their state, i.e. whether the button has focus or not, the window that contains the button has focus or not, the mouse is over the button or not, the button is enabled or disabled, etc. For example, in Windows XP the border color of a standard button changes depending on focus and mouse over:
- * http://rguils.googlecode.com/svn/wiki/images/next.png
- * http://rguils.googlecode.com/svn/wiki/images/next_focus.png (button has focus)
- * http://rguils.googlecode.com/svn/wiki/images/next_mouse_over.png (mouse over button)
- * http://rguils.googlecode.com/svn/wiki/images/next_disabled.png (button is disabled)
+ * <img src="http://rguils.googlecode.com/svn/wiki/images/next.png" align="middle">
+ * <img src="http://rguils.googlecode.com/svn/wiki/images/next_focus.png" align="middle"> (button has focus)
+ * <img src="http://rguils.googlecode.com/svn/wiki/images/next_mouse_over.png" align="middle"> (mouse over button)
+ * <img src="http://rguils.googlecode.com/svn/wiki/images/next_disabled.png" align="middle"> (button is disabled)
 If the Next button in the wizzard has focus but in your image it doesn't, then the Back button might look more similar to your image than the Next button. A human user would most likely not make that mistake because as humans we use the button label to identify the correct button and abstract from the border color, but Sikuli (or the image matching algorithm it uses) has no concept of characters; it just sees a rectangular area of pixels.
 
 Then why not use multiple images of the Next button, one with a thin black border, one with a blue border and one with an orange border. We let Sikuli find the best match for each image and then pick the match with the highest score:
