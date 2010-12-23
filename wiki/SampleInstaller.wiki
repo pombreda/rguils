@@ -24,7 +24,7 @@ installer.install()                        # start installation
 installer.wait_until_finished()
 installer.finish()                         # close installer
 }}}
-All images in this tutorial were taken on a Windows XP system, but the principles outlined here are mostly system independent. You should have some familiarity with Sikuli (you may want to read the SikuliOverview first). The article about RobustGUIAutomation is recommended for further reading.
+All images in this tutorial were taken on a Windows XP system, but the principles outlined here are mostly system independent. You should have some familiarity with Sikuli (you may want to read the SikuliOverview first). The article about [RobustGUIAutomation] is recommended for further reading.
 
 = Collecting images =
 
