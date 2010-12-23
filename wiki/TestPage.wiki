@@ -1,0 +1,8 @@
+#summary Testing the wiki markup
+
+= Test =
+
+{{{
+first = 0
+*new = 1
+}}}
