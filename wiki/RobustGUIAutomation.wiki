@@ -15,7 +15,7 @@ Sikuli's visual scripting promises to make GUI automation very easy. However, in
 
 == Identifying GUI elements correctly ==
 
-Let's say you are automating some wizzard with three buttons labeled "Next", "Back" and "Cancel" and you want to click the Next button:
+Let's say you are automating some wizard with three buttons labeled "Next", "Back" and "Cancel" and you want to click the Next button:
 
 http://rguils.googlecode.com/svn/wiki/images/installerwindow.png
 
@@ -30,7 +30,7 @@ The problem is that buttons look different depending on their state, i.e. whethe
  * <img src="http://rguils.googlecode.com/svn/wiki/images/next_focus.png" align="middle"> (button has focus)
  * <img src="http://rguils.googlecode.com/svn/wiki/images/next_mouse_over.png" align="middle"> (mouse over button)
  * <img src="http://rguils.googlecode.com/svn/wiki/images/next_disabled.png" align="middle"> (button is disabled)
-If the Next button in the wizzard has focus but in your image it doesn't, then the Back button might look more similar to your image than the Next button. A human user would most likely not make that mistake because as humans we use the button label to identify the correct button and abstract from the border color, but Sikuli (or the image matching algorithm it uses) has no concept of characters; it just sees a rectangular area of pixels.
+If the Next button in the wizard has focus but in your image it doesn't, then the Back button might look more similar to your image than the Next button. A human user would most likely not make that mistake because as humans we use the button label to identify the correct button and abstract from the border color, but Sikuli (or the image matching algorithm it uses) has no concept of characters; it just sees a rectangular area of pixels.
 
 Then why not use multiple images of the Next button, one with a thin black border, one with a blue border and one with an orange border. We let Sikuli find the best match for each image and then pick the match with the highest score:
 {{{
@@ -55,7 +55,7 @@ The problem is that this approach is invalid, because it compares match scores t
  * However, if one image is matched with one region and another image is matched with another region, there is no common base to compare the match scores.
 Match scores without a common base are incomparable because a match score is not some absolute measure of similarity. For example, a score of 0.7 cannot be interpreted as 70% similarity between the image and the region.
 
-As an illustration, imagine you want to make apple cake and you send an alien from a different planet to the grocery to buy apples. Unfortunately, the alien doesn't know apples, so you give him two pictures, one with green apples and one with yellow apples. The grocery has green apples and yellow mangos. The alien looks at the apples and mangos and compares them to the apples on his two pictures and concludes that the green apples look like green apples and the mangos look like yellow apples. For some reason the alien thinks that the mangos look more like yellow apples than the green apples look like the green apples on his picture (maybe they are smaller than those on the picture), and he decides to buy the mangos. When he comes back with the mangos, you are angry because you can't make apple cake with mangos.
+As an illustration, imagine you want to make apple cake and you send an alien from a different planet to the grocery to buy apples. Unfortunately, the alien doesn't know apples, so you give him two pictures, one with green apples and one with yellow apples. The grocery has green apples and yellow mangoes. The alien looks at the apples and mangoes and compares them to the apples on his two pictures and concludes that the green apples look like green apples and the mangoes look like yellow apples. For some reason the alien thinks that the mangoes look more like yellow apples than the green apples look like the green apples on his picture (maybe they are smaller than those on the picture), and he decides to buy the mangoes. When he comes back with the mangoes, you are angry because you can't make apple cake with mangoes.
 
 Identifying buttons (and other GUI elements for that matter) using fuzzy image matching can be regarded as a classification problem: Find each button on the screen and determine the most likely button type (i.e. Back, Next or Cancel). An algorithm that compares match scores does not work, as argued above, even with the additional assumption that one of the buttons is the target (i.e. Next) button and all other buttons are of a different type. Applying thresholds to the match scores does not work either, for the same reason (i.e. match scores are not absolute measures of similarity).
 
@@ -136,7 +136,7 @@ Note that Sikuli itself has no concept of an application window. Sikuli treats t
  # The event, along with the position of the click on the screen, is received by the OS (i.e. Windows), which knows the window (if any) that is currently visible on the screen at the click position, and the application that owns the window.
  # The OS propagates the event, along with the window id, to the application.
  # An event listener in the application receives the event and calls an event handler that updates the window state and/or processes the event according to the application logic.
-For the purpose of automating an application, this means we cannot rely on Sikuli to obtain information about the (location and size of the) current application window, but we can use Sikuli to find the window on the screen. If the application window contains a logo or some other identifyable image of sufficient size, its location on the screen can be determined relatively reliably by searching for that image. Assuming that the window size is fixed and known, a region can then be created with the size of the window and a location relative to the logo or other image.
+For the purpose of automating an application, this means we cannot rely on Sikuli to obtain information about the (location and size of the) current application window, but we can use Sikuli to find the window on the screen. If the application window contains a logo or some other identifiable image of sufficient size, its location on the screen can be determined relatively reliably by searching for that image. Assuming that the window size is fixed and known, a region can then be created with the size of the window and a location relative to the logo or other image.
 
 http://rguils.googlecode.com/svn/wiki/images/installerwindow_anchor.png
 
