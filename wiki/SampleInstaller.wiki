@@ -184,7 +184,7 @@ class Installer(AnchoredWindow):
         self.buttons.find_buttons()
         self.buttons.waitUntilButtonIsEnabled('next', NEXT_BUTTON_ENABLED_TIMEOUT)
 }}}
-Note the 'next' argument to waitUntilButtonIsEnabled: This is the key in the `IMG_BUTTONS` dictionary for the Next button images, and it is derived by the [Images] module from the `IMG_BUTTON_NEXT*` constant names in our Sikuli project file.
+Note the 'next' argument to `waitUntilButtonIsEnabled`: This is the key in the `IMG_BUTTONS` dictionary for the Next button images, and it is derived by the [Images] module from the `IMG_BUTTON_NEXT*` constant names in our Sikuli project file.
 
 Also, note that even though the Yes and No buttons are not used in the installer main window, for simplicity we use all button images for the main window buttons.
 
