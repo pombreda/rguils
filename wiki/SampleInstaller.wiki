@@ -49,7 +49,7 @@ Finally, we also need images of the checkbox to launch the application after ins
 
 http://rguils.googlecode.com/svn/wiki/images/sikuliide3.jpg
 
-Note the naming scheme. The constants `IMG_BUTTON_`<it>NAME</it>`*`, `IMG_DISABLED_BUTTON_`<it>NAME</it>`*`, `IMG_CHECKED_BOX*` and `IMG_UNCHECKED_BOX*` are used by the [Images] module to create dictionaries with images that can be used to create instances of [Buttons] and [Checkboxes].
+Note the naming scheme. The constants `IMG_BUTTON_`<i>NAME</i>`*`, `IMG_DISABLED_BUTTON_`<i>NAME</i>`*`, `IMG_CHECKED_BOX*` and `IMG_UNCHECKED_BOX*` are used by the [Images] module to create dictionaries with images that can be used to create instances of [Buttons] and [Checkboxes].
 
 = Importing images =
 
@@ -91,7 +91,7 @@ from sikuli.Sikuli import openApp
 class Installer:
     """Class to automate the Sikuli installer."""
 
-    def `__init__`(self, installer_exe_path):
+    def __init__(self, installer_exe_path):
         if not os.path.exists(installer_exe_path):
             raise Exception('No such file: %s' % installer_exe_path)
         self.path = installer_exe_path
@@ -123,11 +123,11 @@ WINDOW_HEIGHT = 392
 class Installer(AnchoredWindow):
     """Class to automate an installer."""
 
-    def `__init__`(self, installer_exe_path):
+    def __init__(self, installer_exe_path):
         if not os.path.exists(installer_exe_path):
             raise Exception('No such file: %s' % installer_exe_path)
         self.path = installer_exe_path
-        AnchoredWindow.`__init__`(self, IMG_INSTALLER_WELCOME,
+        AnchoredWindow.__init__(self, IMG_INSTALLER_WELCOME,
                 ANCHOR_IMAGE_OFFSET_X, ANCHOR_IMAGE_OFFSET_Y,
                 WINDOW_WIDTH, WINDOW_HEIGHT,
                 name = 'installer', title = 'Setup')
@@ -163,11 +163,11 @@ NEXT_BUTTON_ENABLED_TIMEOUT = 20
 class Installer(AnchoredWindow):
     """Class to automate an installer."""
 
-    def `__init__`(self, installer_exe_path):
+    def __init__(self, installer_exe_path):
         if not os.path.exists(installer_exe_path):
             raise Exception('No such file: %s' % installer_exe_path)
         self.path = installer_exe_path
-        AnchoredWindow.`__init__`(self, IMG_INSTALLER_WELCOME,
+        AnchoredWindow.__init__(self, IMG_INSTALLER_WELCOME,
                 ANCHOR_IMAGE_OFFSET_X, ANCHOR_IMAGE_OFFSET_Y,
                 WINDOW_WIDTH, WINDOW_HEIGHT,
                 name = 'installer', title = 'Setup')
@@ -288,7 +288,7 @@ Then add the indicated line to the run method, and add the methods to configure 
         self.buttons.waitUntilButtonIsEnabled('next', NEXT_BUTTON_ENABLED_TIMEOUT)
         self.shortcut_checkboxes = None
 
-    def `_configure_shortcut`(self, shortcut, add_shortcut):
+    def _configure_shortcut(self, shortcut, add_shortcut):
         if self.shortcut_checkboxes is None:
             self.shortcut_checkboxes = VerticalCheckboxList(IMG_CHECKBOXES,
                     region = self)
@@ -304,19 +304,19 @@ Then add the indicated line to the run method, and add the methods to configure 
         """Checks the checkbox for the Desktop shortcut.
            If add_shortcut is False, unchecks the checkbox.
         """
-        self.`_configure_shortcut`(0, add_shortcut)
+        self._configure_shortcut(0, add_shortcut)
 
     def configure_start_menu_shortcut(self, add_shortcut = True):
         """Checks the checkbox for the Start Menu shortcut.
            If add_shortcut is False, unchecks the checkbox.
         """
-        self.`_configure_shortcut`(1, add_shortcut)
+        self._configure_shortcut(1, add_shortcut)
 
     def configure_quick_launch_shortcut(self, add_shortcut = True):
         """Checks the checkbox for the Quick Launch shortcut.
            If add_shortcut is False, unchecks the checkbox.
         """
-        self.`_configure_shortcut`(2, add_shortcut)
+        self._configure_shortcut(2, add_shortcut)
 }}}
 Once the checkbox list instance has been created and the checkboxes identified (by calling `find_elements`), a checkbox can be checked and unchecked simply by calling the check and uncheck methods with the checkbox index.
 
