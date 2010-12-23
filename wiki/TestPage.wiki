@@ -2,7 +2,7 @@
 
 = Test =
 
-<wiki:code language="py">
+<code>
 first = 0
 new = 1
-</wiki:code>
+</code>
