@@ -2,7 +2,7 @@
 
 = Test =
 
-{{{
+<wiki:code>
 first = 0
-<b>new = 1</b>
-}}}
+new = 1
+</wiki:code>
