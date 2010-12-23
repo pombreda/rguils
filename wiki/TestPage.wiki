@@ -1,8 +1,0 @@
-#summary Testing the wiki markup
-
-= Test =
-
-<code>
-first = 0
-new = 1
-</code>
