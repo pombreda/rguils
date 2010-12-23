@@ -45,7 +45,7 @@ We collect images of each button in all possible states. To capture a button in 
 
 http://rguils.googlecode.com/svn/wiki/images/sikuliide2.jpg
 
-Finally, we also need images of the checkbox to launch the application after installation is complete.
+Finally, the Configure Shortcuts page contains checkboxes to select where shortcuts to the Sikuli IDE should be created by the installer, so we take images of them as well:
 
 http://rguils.googlecode.com/svn/wiki/images/sikuliide3.jpg
 
@@ -81,7 +81,7 @@ from seagull.images import IMG_BUTTONS
 
 = Running the installer =
 
-Create a new module file sampleinstaller.py with a class Installer. We pass the path to the installer executable to the constructor. To launch the installer, we call Sikuli's openApp method.
+Create a new module file sampleinstaller.py with a class `Installer`. We pass the path to the installer executable to the constructor. To launch the installer, we call Sikuli's `openApp` method.
 {{{
 """sampleinstaller.py"""
 
@@ -103,11 +103,11 @@ class Installer:
 
 = Locating the installer window =
 
-The first step to interact with the installer window through Sikuli is to determine its size and location on the screen. Since the window size is fixed, we can simply measure it (for example, using the selectRegion function in the Sikuli IDE) and define two constants, `WINDOW_WIDTH` and `WINDOW_HEIGHT`.
+The first step to interact with the installer window through Sikuli is to determine its size and location on the screen. Since the window size is fixed, we can simply measure it (for example, using the `selectRegion` function in the Sikuli IDE) and define two constants, `WINDOW_WIDTH` and `WINDOW_HEIGHT`.
 
-The location of the installer window on the screen may not be known a priori. The !AnchoredRegion class (see [Util]) and its subclass !AnchoredWindow (see [Window]) provide a convenient way to determine the location of a region on the screen by providing an _anchor image_, i.e. an image that occurs at a fixed offset to the top-left corner of the region.
+The location of the installer window on the screen may not be known a priori. The `AnchoredRegion` class (see [Util]) and its subclass `AnchoredWindow` (see [Window]) provide a convenient way to determine the location of a region on the screen by providing an _anchor image_, i.e. an image that occurs at a fixed offset to the top-left corner of the region.
 
-We import the anchor image from our installerimages Sikuli project and define two constants with the offset of the image in the installer window. Then we make the Installer class a subclass of !AnchoredWindow and pass the anchor image, the window size and the anchor image offset to the !AnchoredWindow `__init__` method. When the installer is launched, we call the anchor method, which waits for the anchor image to appear and then sets the window coordinates accordingly.
+We import the anchor image from our installerimages Sikuli project and define two constants with the offset of the image in the installer window. Then we make the `Installer` class a subclass of `AnchoredWindow` and pass the anchor image, the window size and the anchor image offset to the `AnchoredWindow` `__init__` method. When the installer is launched, we call the `anchor` method, which waits for the anchor image to appear and then sets the window coordinates accordingly.
 {{{
 import os.path
 from sikuli.Sikuli import openApp
@@ -192,7 +192,7 @@ To navigate between the different installer pages, we define a number of methods
 {{{
 from time import sleep
 }}}
-The add the following methods to the Installer class:
+The add the following methods to the `Installer` class:
 {{{
     def next(self):
         """Clicks the Next button."""
@@ -260,20 +260,20 @@ Then add the keyboard based navigation methods:
         SCREEN.type(Key.ESC)
         sleep(1)
 }}}
-Key-press events are generated in Sikuli by calling the type method on a region (the sikuli.Sikuli module also defines a type function, but we avoid this because if overrides the python built-in type function). Here, we call type on the SCREEN object.
+Key-press events are generated in Sikuli by calling the `type` method on a region (the sikuli.Sikuli module also defines a `type` function, but we avoid this because if overrides the python built-in `type` function). Here, we call `type` on the `SCREEN` object.
 
-To ensure that the key-press events reach the installer window, and not some other application window, we call setFocus (see [Window]), which gives the installer window focus by clicking on the window title bar (note that Installer is an indirect subclass of [Window]). Giving the window focus explicitly is very useful when an Installer instance is created in a Jython command prompt and the navigation methods are called from there, because at the time we hit Enter the focus is on the Jython command window and not on the installer window.
+To ensure that the key-press events reach the installer window, and not some other application window, we call `setFocus` (see [Window]), which gives the installer window focus by clicking on the window title bar (note that `Installer` is an indirect subclass of [Window]). Giving the window focus explicitly is very useful when an `Installer` instance is created in a Jython command prompt and the navigation methods are called from there, because at the time we hit Enter the focus is on the Jython command window and not on the installer window.
 
 = Configuring Sikuli shortcuts =
 
 By default the Sikuli installer adds shortcuts to the Sikuli IDE on the user's desktop, in the Windows start menu, and in the quick launch toolbar. These can be disabled by unchecking one or more of the checkboxes on the Configure Shortcuts page.
 
-To automate the checkboxes, we use the !VerticalCheckboxList class (see [Checkboxes]). It accepts a dictionary with checkbox images (as provided by the [Images] module) and identifies all checkboxes in a given region, and what their state (i.e. checked or unchecked) is. Add the following imports to the beginning of the file:
+To automate the checkboxes, we use the `VerticalCheckboxList` class (see [Checkboxes]). It accepts a dictionary with checkbox images (as provided by the [Images] module) and identifies all checkboxes in a given region, and what their state (i.e. checked or unchecked) is. Add the following imports to the beginning of the file:
 {{{
 from seagull.checkboxes import VerticalCheckboxList
 from seagull.images import IMG_BUTTONS, IMG_BUTTONS_DISABLED, IMG_CHECKBOXES
 }}}
-Then add the indicated line to the run method, and add the methods to configure the application shortcuts:
+Then change the `run` method as shown, and add the methods to configure the application shortcuts:
 {{{
     def run(self):
         """Runs the installer."""
@@ -318,7 +318,7 @@ Then add the indicated line to the run method, and add the methods to configure 
         """
         self._configure_shortcut(2, add_shortcut)
 }}}
-Once the checkbox list instance has been created and the checkboxes identified (by calling `find_elements`), a checkbox can be checked and unchecked simply by calling the check and uncheck methods with the checkbox index.
+Once the checkbox list instance has been created and the checkboxes identified (by calling `find_elements`), a checkbox can be checked and unchecked simply by calling the `check` and `uncheck` methods with the checkbox index.
 
 Note that the checkbox list instance is only created when it is needed, and it is created only once everytime the installer is run. The checkbox list instance is aware of the current state of the checkboxes.
 
@@ -332,7 +332,7 @@ Add the following import to the beginning of the file:
 {{{
 from seagull.util import Wait
 }}}
-Then add the following methods to the Installer class:
+Then add the following methods to the `Installer` class:
 {{{
     def is_finished(self):
         """Returns True if the installer has finished installing.
@@ -354,16 +354,16 @@ Then add the following methods to the Installer class:
         while not self.is_finished():
             waiting.wait()
 }}}
-The `is_finished` method updates the buttons object in the Installer instance and checks whether the Finish button was found. The `wait_until_finished` method calls `is_finished` repeatedly, sleeping in between, until the Finish button is found or the maximum wait time is exceeded. In the latter case a !TimeoutExceeded is raised (see Wait in [Util]).
+The `is_finished` method updates the buttons object in the `Installer` instance and checks whether the Finish button was found. The `wait_until_finished` method calls `is_finished` repeatedly, sleeping in between, until the Finish button is found or the maximum wait time is exceeded. In the latter case `TimeoutExceeded` is raised (see `Wait` in [Util]).
 
 = Handling the confirmation popup window =
 
-You may have noticed that when you call the cancel method, there is nothing that handles the confirmation window that pops up when the Cancel button is pressed. We shall add a method `confirm_cancel` that clicks the Yes button (or the No button if requested) in the popup window. To do so, we use a separate button list object with only the images of those two buttons, and restrict it to the region of the popup window. The popup window always appears in the center of the installer window. We define two constants with the popup window dimensions:
+You may have noticed that when you call the `cancel` method, there is nothing that handles the confirmation window that pops up when the Cancel button is pressed. We shall add a method `confirm_cancel` that clicks the Yes button (or the No button if requested) in the popup window. To do so, we use a separate button list object with only the images of those two buttons, and restrict it to the region of the popup window. The popup window always appears in the center of the installer window. We define two constants with the popup window dimensions:
 {{{
 CONFIRM_WINDOW_WIDTH = 349
 CONFIRM_WINDOW_HEIGHT = 143
 }}}
-Next, we add some code to the run method that calculates the location of the popup window region and defines the buttons:
+Next, we add some code to the `run` method that calculates the location of the popup window region and defines the buttons:
 {{{
     def run(self):
         """Runs the installer."""
@@ -384,7 +384,7 @@ Next, we add some code to the run method that calculates the location of the pop
         self.buttons.waitUntilButtonIsEnabled('next', NEXT_BUTTON_ENABLED_TIMEOUT)
         self.shortcut_checkboxes = None
 }}}
-Now we can add the `confirm_cancel` method which finds the buttons in the popup window region and clicks the specified button ('yes' or 'no'). We modify the cancel method so that it clicks the Yes button after hitting Cancel.
+Now we can add the `confirm_cancel` method which finds the buttons in the popup window region and clicks the specified button ('yes' or 'no'). We modify the `cancel` method so that it clicks the Yes button after hitting Cancel.
 {{{
     def confirm_cancel(self, button):
         """Clicks the specified button in the confirmation window."""
@@ -415,7 +415,7 @@ We can also modify the keyboard based cancel method to use the keyboard shortcut
 
 To close the installer window, you click Cancel, confirm and click Finish. You can also click on the Close button in the window title bar, which has the same effect of hitting Cancel when the Cancel button is enabled, and Finish when the Finish button is enabled.
 
-Since our Installer is a subclass of [Window] (by virtue of !AnchoredWindow), it has a close method that clicks on the Close button in the window title bar. In order to shut down the installer without installing, it has to be called twice:
+Since our `Installer` class is a subclass of [Window] (by virtue of `AnchoredWindow`), it has a `close` method that clicks on the Close button in the window title bar. In order to shut down the installer without installing, it has to be called twice:
 {{{
 installer = Installer(INSTALLER_EXE_PATH)
 installer.run()
