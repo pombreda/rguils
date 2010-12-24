@@ -53,7 +53,7 @@ This searches for menu_header_image in app_region and creates an anchored region
 
 === Wait ===
 
-The Wait class can be used to sleep in intervals until a timeout is reached. An exception is raised when the timeout is reached.
+The Wait class can be used to sleep in intervals until a timeout is reached. !TimeoutExceeded is raised when the timeout is reached.
 
 Example:
 {{{
@@ -63,7 +63,16 @@ waiting = Wait(30, interval = 3, exception_message = 'waiting time exceeded')
 while not test_some_condition():
     waiting.wait()
 }}}
-If the condition is not true, it is retested repeatedly after 3 seconds, until it becomes true or the waiting instance has spent 30 seconds sleeping. In the latter case, an exception with the specified message is raised.
+If the condition is not true, it is retested repeatedly after 3 seconds, until it becomes true or the waiting instance has spent 30 seconds sleeping. In the latter case, !TimeoutExceeded with the specified message is raised.
+
+=== !TimeoutExceeded ===
+
+an exception raised by {{{wait()}}} when the timeout is exceeded.
+
+Example:
+{{{
+raise TimeoutExceeded('condition not true after the specified timeout')
+}}}
 
 == Functions ==
 
